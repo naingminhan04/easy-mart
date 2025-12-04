@@ -1,6 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate} from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useState, useRef } from "react";
 import { getCart, setCart } from "../utils/cart";
+import { Check } from "lucide-react";
 
 export function DummyProduct() {
   return (
@@ -29,35 +31,50 @@ export function DummyProduct() {
 
 export default function Product({ product }) {
   const location = useLocation();
-  const { user, isAuthenticated, loginWithRedirect } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
+  const [buttonState, setButtonState] = useState("default");
+  const navigate = useNavigate();
+
+  const buttonTimer = useRef(null);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      loginWithRedirect();
+      navigate('/auth');
       return;
     }
+
+    if (buttonState === "added") return;
     const cart = getCart(user);
-    const existing = cart.find(item => item.id === product.id);
+    const existing = cart.find((item) => item.id === product.id);
     if (existing) {
       existing.qty += 1;
     } else {
       cart.push({
         id: product.id,
         name: product.name,
-        price: product.tags.includes("Sale") ? product.finalPrice : product.price,
-        qty: 1
+        img: product.images[0],
+        price: product.tags.includes("Sale")
+          ? product.finalPrice
+          : product.price,
+        qty: 1,
       });
     }
     setCart(user, cart);
-    // Optionally show a toast/notification
+
+    setButtonState("added");
+    if (buttonTimer.current) clearTimeout(buttonTimer.current);
+
+    buttonTimer.current = setTimeout(() => {
+      setButtonState("default");
+    }, 1500);
   };
 
   return (
     <div className="flex-col border-4 border-white overflow-hidden lg:w-60 shadow-lg hover:shadow-gray-500">
       <Link
         to={`/products/${product.id}`}
-        state={{ backgroundLocation: location }}
+        state={{ backgroundLocation: location, product }}
       >
         <div className="relative bg-gray-200 flex justify-center items-center aspect-square overflow-hidden">
           {product.tags.includes("Hot") && (
@@ -82,7 +99,9 @@ export default function Product({ product }) {
         {product.tags.includes("Sale") ? (
           <div className="p-2 text-green-600 text-sm font-bold md:text-base flex items-center gap-2">
             <span>${product.finalPrice}</span>
-            <span className="text-xs rounded-xl text-white px-2 py-0.5 bg-green-400">-{product.discountPercent}%</span>
+            <span className="text-xs rounded-xl text-white px-2 py-0.5 bg-green-400">
+              -{product.discountPercent}%
+            </span>
           </div>
         ) : (
           <div className="p-2 text-green-600 text-sm font-bold md:text-base">
@@ -91,10 +110,24 @@ export default function Product({ product }) {
         )}
       </Link>
       <button
-        className="flex w-full text-black justify-center p-3 bg-gray-100 hover:bg-gray-300 font-semibold rounded-b-lg border-t border-gray-200 transition"
+        disabled={buttonState === "added"}
         onClick={handleAddToCart}
+        className={`
+          flex w-full justify-center p-3 font-semibold rounded-b-lg border-t border-gray-200 transition
+          ${
+            buttonState === "added"
+              ? "bg-green-500 text-white"
+              : "bg-gray-100 hover:bg-gray-300 text-black"
+          }
+        `}
       >
-        Add to Cart
+        {buttonState === "added" ? (
+          <span className="flex items-center gap-2">
+            <Check size={24} /> <span className="hidden md:flex">Added to Cart</span>
+          </span>
+        ) : (
+          "Add to Cart"
+        )}
       </button>
     </div>
   );

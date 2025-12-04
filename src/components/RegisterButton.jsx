@@ -1,17 +1,22 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link } from "react-router-dom";
 
 export default function RegisterButton() {
   const { loginWithRedirect } = useAuth0();
 
-  return (
-    <Link
-      onClick={() =>
-        loginWithRedirect()
+  const handleRegister = () => {
+    loginWithRedirect({
+      authorizationParams: {
+        screen_hint: 'signup'
       }
-      className="font-bold"
+    });
+  };
+
+  return (
+    <button
+      onClick={handleRegister}
+      className="font-bold px-4 py-2 text-white bg-blue-500 rounded"
     >
       Register
-    </Link>
+    </button>
   );
 }

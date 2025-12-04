@@ -13,7 +13,7 @@ async function fetchDetail(productId) {
 
 export default function ProductPage() {
   const { productId } = useParams();
-  const { user, isAuthenticated, loginWithRedirect } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
   const { data: product, isLoading, error } = useQuery({
     queryKey: ["product", productId],
@@ -25,7 +25,7 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
-      loginWithRedirect();
+      navigate('/auth')
       return;
     }
     const cart = getCart(user);
@@ -41,17 +41,15 @@ export default function ProductPage() {
       });
     }
     setCart(user, cart);
-    // Optionally show a toast/notification
   };
 
   const handleBuy = () => {
     if (!isAuthenticated) {
-      loginWithRedirect();
+      navigate('/auth')
       return;
     }
-    // Add to cart and go to cart page
     handleAddToCart();
-    navigate(`/carts/${user ? user.email || user.sub : "guest"}`);
+    navigate(`/cart/${user.sub}`);
   };
 
   return (
