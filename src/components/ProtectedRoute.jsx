@@ -3,6 +3,6 @@ import Auth from "../pages/Auth";
 
 export default function ProtectedRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth0();
-  if (isLoading) return <div className="flex justify-center items-center h-64 text-lg font-semibold">Loading...</div>;
+  if (isLoading) return <div className="flex justify-center items-center min-h-dvh text-lg font-semibold">Loading...</div>;
   return isAuthenticated ? children : <Auth />;
 }

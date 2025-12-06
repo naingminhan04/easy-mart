@@ -20,7 +20,7 @@ export default function ProductPage() {
     queryFn: () => fetchDetail(productId),
   });
 
-  if (isLoading) return <div className="flex justify-center items-center min-h-[60vh] text-lg font-semibold">Loading...</div>;
+  if (isLoading) return <div className="flex justify-center items-center min-h-dvh text-lg font-semibold">Loading...</div>;
   if (error) return <div className="flex justify-center items-center min-h-[60vh] text-red-600 font-semibold">{error.message}</div>;
 
   const handleAddToCart = () => {
@@ -58,8 +58,8 @@ export default function ProductPage() {
         <div className="scrollbar-none md:flex md:mx-auto items-center bg-white xl:max-w-5xl rounded-lg shadow-md">
           <ProductDetail />
         </div>
-        <div className="md:flex md:mx-auto items-center bg-white xl:max-w-5xl">
-          {/* Optionally add more details here */}
+        <div className="md:flex md:mx-auto justify-center w-full items-center bg-white xl:max-w-5xl">
+           
         </div>
       </div>
       <div className="sticky bottom-0 md:static flex w-full items-center border-t border-gray-200 bg-white">

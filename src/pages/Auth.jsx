@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 import LoginButton from "../components/LoginButton";
 import LogoutButton from "../components/LogoutButton";
 import RegisterButton from "../components/RegisterButton";
@@ -6,9 +7,13 @@ import { ShoppingBag } from "lucide-react";
 
 export default function Auth() {
   const { isAuthenticated, isLoading, error, user } = useAuth0();
+  const navigate = useNavigate();
 
-  if (isLoading) return <div className="pt-20 text-center">Loading...</div>;
-  if (error) return <div className="pt-20 text-center">Error: {error.message}</div>;
+  if (isLoading) return <div className="min-h-dvh text-center">Loading...</div>;
+  if (error) return <div className="min-h-dvh text-center">Error: {error.message}</div>;
+  if (isAuthenticated) {
+    navigate("/")
+  }
 
   return (
     <div className="app-container pt-20 flex flex-col items-center">

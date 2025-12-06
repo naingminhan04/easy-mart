@@ -3,7 +3,7 @@ import {
   Search,
   LogInIcon,
   UserPlus,
-  Filter,
+  Menu,
   User,
   LogOut,
 } from "lucide-react";
@@ -35,7 +35,7 @@ export default function NavBar() {
       </Link>
 
       <div className="col-span-4 flex justify-center">
-        <div className="flex w-full sm:max-w-2/3">
+        <div className="flex w-full sm:max-w-2/3 lg:w-145">
           <input
             className="w-full border-2 h-8 md:h-10 outline-0 border-white bg-white text-sm text-black rounded-l-xl p-1 focus:bg-white"
             type="text"
@@ -97,14 +97,14 @@ export default function NavBar() {
 
       <div className="flex sm:hidden col-span-1 justify-end items-center relative">
         <button
-          className="p-2 border rounded border-white"
+          className="p-2"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          <Filter size={20} />
+          <Menu className="size-7" />
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 top-full mt-2 w-48 bg-black border border-white rounded shadow-lg flex flex-col p-2 gap-2 z-20">
+          <div className="absolute right-0 top-full mt-2 w-40 bg-black shadow-lg flex flex-col rounded-2xl p-2 gap-2 z-20">
             {isAuthenticated ? (
               <>
                 <Link
